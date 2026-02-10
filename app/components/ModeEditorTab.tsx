@@ -23,6 +23,17 @@ export default function ModeEditorTab() {
     const dispatch = useAppDispatch();
     const { zones, zoneNames, selectedZoneKey, selectedZoneDetails, isConnected, isLoadingZones } = useAppSelector((s) => s.ble);
 
+    // Auto-select the only active zone if none selected
+    useEffect(() => {
+        if (!selectedZoneKey && zones && zones.length > 0) {
+            const activeZones = zones.filter(z => z.isActive);
+            if (activeZones.length === 1) {
+                dispatch(setSelectedZone(activeZones[0].key));
+                dispatch(getZoneDetails(activeZones[0].key));
+            }
+        }
+    }, [selectedZoneKey, zones, dispatch]);
+
     const zone = selectedZoneDetails;
 
     const [modeType, setModeType] = useState("static");

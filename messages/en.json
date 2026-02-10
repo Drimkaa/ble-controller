@@ -69,7 +69,8 @@
             "overlaps": "Overlaps with active zone",
             "activate": "Activate",
             "deactivate": "Deactivate"
-        }
+        },
+        "noFreeRanges": "No available ranges for a new zone."
     },
     "editor": {
         "title": "Mode Editor",

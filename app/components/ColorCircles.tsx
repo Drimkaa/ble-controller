@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useTranslations } from 'next-intl';
 import type { Color } from "../../lib/bleClient";
 
@@ -22,14 +22,22 @@ function hexToRgb(hex: string): Color {
     ];
 }
 
+function isIOS() {
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') return false;
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+
 export default function ColorCircles({ colors, maxColors = 10, onChange }: Props) {
     const t = useTranslations();
     const pickerRef = useRef<HTMLInputElement>(null);
     const editingIdx = useRef<number | null>(null);
+    const [showIOSPicker, setShowIOSPicker] = useState<{ idx: number, value: string } | null>(null);
 
     const handleCircleClick = (idx: number) => {
         editingIdx.current = idx;
-        if (pickerRef.current) {
+        if (isIOS()) {
+            setShowIOSPicker({ idx, value: rgbToHex(...colors[idx]) });
+        } else if (pickerRef.current) {
             pickerRef.current.value = rgbToHex(...colors[idx]);
             pickerRef.current.click();
         }
@@ -41,6 +49,14 @@ export default function ColorCircles({ colors, maxColors = 10, onChange }: Props
         const next = [...colors];
         next[idx] = hexToRgb(e.target.value);
         onChange(next);
+    };
+
+    const handleIOSPickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!showIOSPicker) return;
+        const next = [...colors];
+        next[showIOSPicker.idx] = hexToRgb(e.target.value);
+        onChange(next);
+        setShowIOSPicker(null);
     };
 
     const handleAdd = () => {
@@ -74,6 +90,21 @@ export default function ColorCircles({ colors, maxColors = 10, onChange }: Props
                 onChange={handlePickerChange}
                 tabIndex={-1}
             />
+            {/* iOS fallback color picker */}
+            {showIOSPicker && (
+                <div className="ios-color-picker-modal">
+                    <div className="ios-color-picker-backdrop" onClick={() => setShowIOSPicker(null)} />
+                    <div className="ios-color-picker-dialog">
+                        <input
+                            type="color"
+                            value={showIOSPicker.value}
+                            onChange={handleIOSPickerChange}
+                            autoFocus
+                        />
+                        <button className="btn btn-ghost" onClick={() => setShowIOSPicker(null)}>{t('common.cancel', 'Cancel')}</button>
+                    </div>
+                </div>
+            )}
 
             <div className="color-circles-row">
                 {colors.map((c, i) => (

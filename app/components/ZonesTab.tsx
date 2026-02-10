@@ -156,6 +156,7 @@ export default function ZonesTab() {
                                 value={form.name}
                                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                                 placeholder={t('zones.form.namePlaceholder')}
+                                maxLength={153}
                             />
                         </div>
 
@@ -165,7 +166,7 @@ export default function ZonesTab() {
                                 <input
                                     type="number"
                                     min={0}
-                                    max={NUM_LEDS}
+                                    max={153}
                                     value={form.start}
                                     onChange={(e) => setForm({ ...form, start: e.target.value })}
                                 />
@@ -175,7 +176,7 @@ export default function ZonesTab() {
                                 <input
                                     type="number"
                                     min={0}
-                                    max={NUM_LEDS}
+                                    max={153}
                                     value={form.end}
                                     onChange={(e) => setForm({ ...form, end: e.target.value })}
                                 />
@@ -194,10 +195,17 @@ export default function ZonesTab() {
 
                         {useOccupied && (
                             <div className="free-ranges">
-                                {freeRanges.length === 0 ? (
-                                    <p className="text-muted text-sm">All pixels occupied.</p>
-                                ) : (
-                                    freeRanges.map((r, i) => (
+                                {(() => {
+                                    // Filter out 0-length ranges
+                                    const validRanges = freeRanges.filter(r => r.end > r.start);
+                                    if (validRanges.length === 0) {
+                                        return <p className="text-muted text-sm">{t('zones.noFreeRanges', 'Нет доступных диапазонов для новой зоны.')}</p>;
+                                    }
+                                    // If only one range and it's 0–0, show message
+                                    if (validRanges.length === 1 && validRanges[0].start === 0 && validRanges[0].end === 0) {
+                                        return <p className="text-muted text-sm">{t('zones.noFreeRanges', 'Нет доступных диапазонов для новой зоны.')}</p>;
+                                    }
+                                    return validRanges.map((r, i) => (
                                         <button
                                             key={i}
                                             className={`range-chip ${form.start === String(r.start) && form.end === String(r.end) ? "active" : ""}`}
@@ -205,8 +213,8 @@ export default function ZonesTab() {
                                         >
                                             {r.start} – {r.end} ({r.end - r.start} LEDs)
                                         </button>
-                                    ))
-                                )}
+                                    ));
+                                })()}
                             </div>
                         )}
 
