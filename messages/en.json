@@ -1,0 +1,148 @@
+{
+    "app": {
+        "title": "LED Controller"
+    },
+    "connection": {
+        "connected": "Connected",
+        "offline": "Offline"
+    },
+    "tabs": {
+        "main": "Main",
+        "zones": "Zones",
+        "editor": "Mode",
+        "library": "Library"
+    },
+    "main": {
+        "device": {
+            "title": "Device",
+            "subtitle": "ESP32 BLE Controller",
+            "connect": "Connect",
+            "connecting": "Connecting...",
+            "connected": "Connected",
+            "notSupported": "Web Bluetooth is not available in this browser."
+        },
+        "power": {
+            "title": "Power",
+            "on": "Strip is on",
+            "off": "Strip is off",
+            "turnOn": "Turn On",
+            "turnOff": "Turn Off"
+        },
+        "brightness": {
+            "title": "Brightness",
+            "subtitle": "Adjust LED intensity",
+            "apply": "Apply",
+            "percent": "{value}%"
+        },
+        "logs": {
+            "title": "Activity Log"
+        }
+    },
+    "zones": {
+        "title": "Active Zones",
+        "noZones": "No zones yet",
+        "addZone": "New Zone",
+        "form": {
+            "name": "Zone Name",
+            "namePlaceholder": "e.g. Desk Backlight",
+            "start": "Start LED",
+            "end": "End LED",
+            "useOccupied": "Use occupied range",
+            "save": "Save Zone",
+            "cancel": "Cancel"
+        },
+        "zoneCard": {
+            "leds": "{start} – {end} LEDs",
+            "edit": "Edit",
+            "delete": "Delete"
+        },
+        "confirmDelete": {
+            "title": "Delete Zone?",
+            "message": "Zone '{name}' will be removed.",
+            "confirm": "Delete",
+            "cancel": "Cancel"
+        },
+        "errors": {
+            "overlap": "Cannot activate \"{name}\" — pixels {start}–{end} overlap with another active zone."
+        },
+        "tooltips": {
+            "overlaps": "Overlaps with active zone",
+            "activate": "Activate",
+            "deactivate": "Deactivate"
+        }
+    },
+    "editor": {
+        "title": "Mode Editor",
+        "selectZone": "Select a Zone",
+        "selectZonePlaceholder": "Choose a zone...",
+        "noZones": "No active zones. Create them in the Zones tab.",
+        "emptyState": {
+            "title": "No Zone Selected",
+            "description": "Choose a zone from the dropdown above."
+        },
+        "mode": {
+            "title": "Mode Type",
+            "static": "Static",
+            "staticDesc": "Single solid color",
+            "fade": "Fade",
+            "fadeDesc": "Smooth color transitions",
+            "pulse": "Pulse",
+            "pulseDesc": "Breathing light effect",
+            "rainbow": "Rainbow",
+            "rainbowDesc": "Rotating color gradient",
+            "fire": "Fire",
+            "fireDesc": "Flickering fire effect"
+        },
+        "speed": {
+            "fade": "Transition speed",
+            "pulse": "Pulse speed",
+            "rainbow": "Rotation speed",
+            "slower": "Slower",
+            "faster": "Faster"
+        },
+        "colors": {
+            "title": "Colors",
+            "clickToEdit": "Color {index} · Click to edit",
+            "addColor": "Add color"
+        },
+        "preview": {
+            "title": "Preview"
+        },
+        "actions": {
+            "apply": "Apply to Zone",
+            "clear": "Clear Mode",
+            "save": "Save to Library"
+        },
+        "saveDialog": {
+            "title": "Save Mode",
+            "name": "Mode Name",
+            "save": "Save",
+            "cancel": "Cancel"
+        }
+    },
+    "library": {
+        "title": "Saved Modes",
+        "noModes": "No saved modes yet",
+        "applyTo": "Apply to Zone",
+        "multiApply": "{count} active zones — choose when applying.",
+        "selectZone": "Select Zone",
+        "selectZonePlaceholder": "Select a zone...",
+        "apply": "Apply",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "mode": {
+            "static": "Static",
+            "fade": "Fade",
+            "pulse": "Pulse",
+            "rainbow": "Rainbow",
+            "fire": "Fire"
+        }
+    },
+    "errors": {
+        "connectionFailed": "Connection failed.",
+        "writeFailed": "Write failed.",
+        "failedToEditZone": "Failed to edit zone.",
+        "failedToSetZoneMode": "Failed to set zone mode.",
+        "failedToClearZoneMode": "Failed to clear zone mode."
+    }
+}

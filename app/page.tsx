@@ -1,65 +1,124 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useTranslations } from 'next-intl';
+import {
+  autoConnectBle,
+  setSupportsBle,
+} from "../store/bleSlice";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import MainTab from "./components/MainTab";
+import ZonesTab from "./components/ZonesTab";
+import ModeEditorTab from "./components/ModeEditorTab";
+import LibraryTab from "./components/LibraryTab";
+import LanguageSwitcher from "./components/LanguageSwitcher";
+import Toast from "./components/Toast";
+
+const TABS = [
+  {
+    id: "main" as const, icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+        <polyline points="9 22 9 12 15 12 15 22" />
+      </svg>
+    )
+  },
+  {
+    id: "zones" as const, icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="3" y="3" width="7" height="7" rx="1" />
+        <rect x="14" y="3" width="7" height="7" rx="1" />
+        <rect x="3" y="14" width="7" height="7" rx="1" />
+        <rect x="14" y="14" width="7" height="7" rx="1" />
+      </svg>
+    )
+  },
+  {
+    id: "editor" as const, icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+      </svg>
+    )
+  },
+  {
+    id: "library" as const, icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
+      </svg>
+    )
+  },
+];
+
+type TabId = (typeof TABS)[number]["id"];
 
 export default function Home() {
+  const t = useTranslations();
+  const dispatch = useAppDispatch();
+  const { isConnected, selectedZoneKey } = useAppSelector((s) => s.ble);
+  const [activeTab, setActiveTab] = useState<TabId>("main");
+
+  useEffect(() => {
+    const isSupported =
+      typeof navigator !== "undefined" && "bluetooth" in navigator;
+    dispatch(setSupportsBle(isSupported));
+    if (isSupported) {
+      dispatch(autoConnectBle());
+    }
+  }, [dispatch]);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="app">
+      <div className="app-bg" aria-hidden="true" />
+
+      {/* Header */}
+      <header className="app-header">
+        <div className="app-header-inner">
+          <div className="app-logo">
+            <span className="app-logo-icon">◈</span>
+            <span className="app-logo-text">{t('app.title')}</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <LanguageSwitcher />
+            <div className={`conn-badge ${isConnected ? "on" : ""}`}>
+              <span className="conn-dot" />
+              <span className="conn-text">
+                {isConnected ? t('connection.connected') : t('connection.offline')}
+              </span>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </header>
+
+      {/* Main Content */}
+      <main className="app-main">
+        <div className="app-container">
+          {activeTab === "main" && <MainTab />}
+          {activeTab === "zones" && <ZonesTab />}
+          {activeTab === "editor" && <ModeEditorTab />}
+          {activeTab === "library" && <LibraryTab />}
         </div>
       </main>
+
+      {/* Tab Bar */}
+      <nav className="tab-bar">
+        {TABS.map((tab) => (
+          <button
+            key={tab.id}
+            className={`tab-btn ${activeTab === tab.id ? "active" : ""}`}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            <span className="tab-icon">{tab.icon}</span>
+            <span className="tab-label">{t(`tabs.${tab.id}`)}</span>
+            {tab.id === "editor" && selectedZoneKey && (
+              <span className="tab-dot" />
+            )}
+          </button>
+        ))}
+      </nav>
+
+      {/* Toast Notifications */}
+      <Toast />
     </div>
   );
 }
