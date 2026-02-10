@@ -199,11 +199,11 @@ export default function ZonesTab() {
                                     // Filter out 0-length ranges
                                     const validRanges = freeRanges.filter(r => r.end > r.start);
                                     if (validRanges.length === 0) {
-                                        return <p className="text-muted text-sm">{t('zones.noFreeRanges', 'Нет доступных диапазонов для новой зоны.')}</p>;
+                                        return <p className="text-muted text-sm">{t('zones.noFreeRanges')}</p>;
                                     }
                                     // If only one range and it's 0–0, show message
                                     if (validRanges.length === 1 && validRanges[0].start === 0 && validRanges[0].end === 0) {
-                                        return <p className="text-muted text-sm">{t('zones.noFreeRanges', 'Нет доступных диапазонов для новой зоны.')}</p>;
+                                        return <p className="text-muted text-sm">{t('zones.noFreeRanges')}</p>;
                                     }
                                     return validRanges.map((r, i) => (
                                         <button

@@ -24,7 +24,8 @@ function hexToRgb(hex: string): Color {
 
 function isIOS() {
     if (typeof window === 'undefined' || typeof navigator === 'undefined') return false;
-    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    // MSStream is only present in IE/Edge, not in iOS browsers
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && typeof (window as any).MSStream === 'undefined';
 }
 
 export default function ColorCircles({ colors, maxColors = 10, onChange }: Props) {
@@ -101,7 +102,7 @@ export default function ColorCircles({ colors, maxColors = 10, onChange }: Props
                             onChange={handleIOSPickerChange}
                             autoFocus
                         />
-                        <button className="btn btn-ghost" onClick={() => setShowIOSPicker(null)}>{t('common.cancel', 'Cancel')}</button>
+                        <button className="btn btn-ghost" onClick={() => setShowIOSPicker(null)}>{t('common.cancel')}</button>
                     </div>
                 </div>
             )}
